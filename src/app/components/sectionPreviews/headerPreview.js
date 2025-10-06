@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
@@ -9,7 +8,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 import { MdArrowBackIos } from "react-icons/md";
 import axios from 'axios';
-import { apiurl } from '../../../config/config.js';
+import { apiurl } from '../../../config/config';
 import HeaderPopUp from '../popupPreviews/headerPopup';
 
 export const schema = {
@@ -470,7 +469,7 @@ const HeaderPreview = ({ content, viewType }) => {
 
               <div className="flex items-center space-x-1 my-2 gap-0.5">
                 {show_search_bar && !isMobile && (
-                  <div className={`w-full md:flex items-center  ${search_bar_border_radius} xl:px-4 px-2.5 py-[3px] focus-within:border-[#de3c3a] transition-colors`} style={{ border: `1px solid ${search_bar_border_color}` }}>
+                  <div className={`w-full flex md:flex items-center ${search_bar_border_radius} xl:px-4 px-2.5 py-[3px] focus-within:border-[#de3c3a] transition-colors`} style={{ border: `1px solid ${search_bar_border_color}` }}>
                     <span className="text-gray-500"> {getIcon('search', 16)} </span>
                     <input
                       type="search"

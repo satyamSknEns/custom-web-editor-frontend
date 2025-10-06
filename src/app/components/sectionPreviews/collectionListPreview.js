@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -154,8 +153,6 @@ const CollectionListPreview = ({ content, viewType }) => {
   const [sliderWidth, setSliderWidth] = useState(0);
   const getDefault = (id) => schema.settings.find((s) => s.id === id)?.default;
   const getVal = (id) => content?.[id] ?? getDefault(id);
-  // const customCollectionsItemsField = schema.settings.find((s) => s.id === 'items' && s.type === "array" )?.itemFields;
-  // const getItemDefault = (id) => customCollectionsItemsField.find(f => f.id === id)?.default;
 
   const isMobileView = sliderWidth < 980;
   const currentMainHeading = getVal("main_heading");
@@ -289,10 +286,10 @@ const CollectionListPreview = ({ content, viewType }) => {
     }
   };
 
-  const getMobileClasses = () => { return "grid grid-cols-1 md:grid-cols-3 gap-2"; };
+  const getMobileClasses = () => { return "grid grid-cols-1 md:grid-cols-3 gap-4"; };
 
   const renderCollections = (layoutClasses) => (
-    <div className={`w-full ${layoutClasses}`}>
+    <div className={`w-full grid grid-cols-1 sm:grid-cols-3 gap-4`}>
       {collectionsToDisplay.map((collection, index) => {
         const repeatImageNumber = (index % 3) + 1;
         const imageSrc = collection.collection_image || `/image/collection${repeatImageNumber}.svg`;
@@ -305,7 +302,7 @@ const CollectionListPreview = ({ content, viewType }) => {
               height={1000}
               className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 opacity-80 group-hover:scale-110 group-hover:-rotate-3`}
             />
-            <div className={`absolute w-full bottom-0 h-10 overflow-hidden group-hover:h-3/4 transition-all duration-500 ease-in-out bg-black/80 text-white text-center px-3 py-1 lg:text-2xl sm:text-sm`}>
+            <div className={`absolute w-full bottom-0 md:h-10 sm:h-8 h-10 overflow-hidden group-hover:h-3/4 transition-all duration-500 ease-in-out bg-black/80 text-white text-center px-3 py-1 lg:text-2xl sm:text-sm`}>
               <p className={`font-medium lg:text-lg sm:text-sm text-lg mb-2`}>{formatCollectionTitle(collection.collection_title) || `Collection's name`}</p>
               <p className={`text-xs`}>{collection.collection_description || `Collection's description`}</p>
             </div>
@@ -320,16 +317,22 @@ const CollectionListPreview = ({ content, viewType }) => {
       <div key={index} className="px-1 outline-none">
         <a href={`/collections/${formatCollectionTitleForUrl(collection.collection_title)}`} className="relative flex flex-col items-center justify-between border border-gray-200 rounded-md overflow-hidden shadow-sm aspect-[1/1] group">
           <img
-            src={collection.collection_image || "/image/placeholder.jpg"}
+            src={collection.collection_image || "image/placeholder.jpg"}
             alt={collection.collection_title}
             width={1000}
             height={1000}
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 opacity-80"
           />
-          <div className={`absolute w-full bottom-0 h-10 overflow-hidden group-hover:h-3/4 transition-all duration-500 ease-in-out bg-black/80 text-white text-center px-3 py-1 lg:text-2xl sm:text-sm`}>
-            <p className={`font-medium lg:text-lg sm:text-base text-sm mb-2`}>{formatCollectionTitle(collection.collection_title) || `Collection's name`}</p>
-            <p className={`text-xs`}>{collection.collection_description || `Collection's description`}</p>
-          </div>
+          {!isMobileView ? (
+            <div className={`absolute w-full bottom-0 overflow-hidden h-10 group-hover:h-3/4 transition-all duration-500 ease-in-out bg-black/80 text-white text-center px-3 py-1 lg:text-2xl sm:text-sm`}>
+              <p className={`font-medium lg:text-lg sm:text-base text-sm mb-2`}>{formatCollectionTitle(collection.collection_title) || `Collection's name`}</p>
+              <p className={`text-xs`}>{collection.collection_description || `Collection's description`}</p>
+            </div>
+          ) : (
+            <div className={`absolute w-full bottom-0 overflow-hidden transition-all duration-500 ease-in-out bg-black/80 text-white text-center px-3 py-1 lg:text-2xl sm:text-sm`}>
+              <p className={`font-medium lg:text-lg sm:text-base text-sm`}>{formatCollectionTitle(collection.collection_title) || `Collection's name`}</p>
+            </div>
+          )}
         </a>
       </div>
     ))
@@ -345,7 +348,7 @@ const CollectionListPreview = ({ content, viewType }) => {
   }
 
   return (
-    <div className={`collection_list_section w-full max-h-full sm:p-8 mb-4 bg-white flex flex-col items-center justify-center rounded-lg`}>
+    <div className={`collection_list_section w-full max-h-full md:p-8 sm:p-5 p-3 mb-4 bg-white flex flex-col items-center justify-center rounded-lg px-3`}>
 
       <h2 className={`mb-4 text-2xl sm:text-3xl font-bold`}>
         {currentMainHeading}

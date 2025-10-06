@@ -189,7 +189,7 @@ const SectionEditorForm = ({
   useEffect(() => {
     const fetchCollections = async () => {
       try {
-        const response = await axios.get(`${apiurl}/api/productCollection/userlist`);
+        const response = await axios.get(`${apiurl}/productCollection/userlist`);
         if (response.data?.success && Array.isArray(response.data.data)) {
           setCollections(response.data.data);
         } else {

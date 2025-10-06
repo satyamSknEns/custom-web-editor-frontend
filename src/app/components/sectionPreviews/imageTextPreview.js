@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import ImageTextPopUp from "../popupPreviews/imageTextPopup";
 
@@ -74,7 +73,7 @@ const ImageTextPreview = ({ content, viewType }) => {
 
   return (
     <div
-      className={`flex items-center justify-center flex-col rounded-md overflow-hidden bg-white sm:p-8`}
+      className={`flex items-center justify-center flex-col rounded-md overflow-hidden bg-white md:p-8 sm:p-5 p-3`}
     >
       <div
         className={`flex items-center flex-col sm:flex-row justify-center ${

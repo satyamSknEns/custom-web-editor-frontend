@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {
   FaFacebook,
   FaInstagram,
@@ -55,13 +54,13 @@ const FooterPopUp = ({ content }) => {
     <footer className={`pt-8 w-full bg-black text-white`}>
       <div className="mx-auto">
         <>
-          <div className={`grid grid-cols-${filteredMenus.length+1} gap-2.5 mb-4 px-2`} >
-            <div className="md:col-span-1" data={content?.logo_image}>
-              <Image
-                src={content?.logo_image || "/image/placeholder.jpg"}
+          <div className={`grid grid-cols-${ filteredMenus.length + 1 } gap-2.5 mb-4 px-2`} >
+            <div className="md:col-span-1">
+              <img
+                src={content?.logo_image}
                 alt="Logo"
                 width={50}
-                height={50}
+                height="auto"
                 className="mb-4"
               />
               <p className={`text-[10px]`}>

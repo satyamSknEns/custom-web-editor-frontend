@@ -12,7 +12,7 @@ const ImageTextPopUp = ({
       <div className="flex items-center flex-col sm:flex-row justify-center">
         <div className="w-full sm:w-1/2 bg-gray-100 flex items-center justify-center border border-slate-400">
           <img
-            src={imageUrl || "/image/placeholder.jpg"}
+            src={imageUrl || "image/placeholder.jpg"}
             alt="Image-With-Text"
             width={1000}
             height={1000}

@@ -5,5 +5,5 @@ export { default as SliderBannerPreview } from "./sliderBannerPreview";
 export { default as CollectionListPreview } from "./collectionListPreview";
 export { default as CustomCollectionPreview } from "./customCollectionPreview";
 export { default as AnnouncementBarPreview } from "./announcementBarPreview";
-export {default as FooterPreview } from "./footerPreview";
+export { default as FooterPreview } from "./footerPreview";
 export { default as NewsletterPreview } from "./newsletterPreview";

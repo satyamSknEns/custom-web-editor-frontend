@@ -23,7 +23,7 @@ const NewsletterPopUp = ({ headingText, subheadingText, buttonLabel,backgroundCo
         />
         <button
           type="submit"
-          className="w-full sm:w-auto text-white py-1 px-3 rounded-md sm:rounded-r-md sm:rounded-l-none border sm:border-l-0"
+          className={`w-full sm:w-auto text-white py-1 px-3 rounded-md sm:rounded-r-md sm:rounded-l-none border border-[${buttonColor}] sm:border-l-0`}
           style={{ backgroundColor: buttonColor }}
         >
           {buttonLabel}
