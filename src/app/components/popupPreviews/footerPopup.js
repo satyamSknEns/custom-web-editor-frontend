@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   FaFacebook,
   FaInstagram,
@@ -56,11 +57,11 @@ const FooterPopUp = ({ content }) => {
         <>
           <div className={`grid grid-cols-${ filteredMenus.length + 1 } gap-2.5 mb-4 px-2`} >
             <div className="md:col-span-1">
-              <img
+              <Image
                 src={content?.logo_image}
                 alt="Logo"
                 width={50}
-                height="auto"
+                height={100}
                 className="mb-4"
               />
               <p className={`text-[10px]`}>

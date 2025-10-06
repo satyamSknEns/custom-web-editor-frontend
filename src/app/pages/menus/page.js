@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import Layout from "../../components/layout";
+// import Layout from "../../layout";
 import { AiOutlineCheck, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { IoMdArrowRoundBack, IoIosArrowDown } from "react-icons/io";
 import { GoPlusCircle } from "react-icons/go";
@@ -576,7 +576,7 @@ const Menus = () => {
     };
 
     return (
-        <Layout>
+        <>
             <div className="bg-white/100 relative rounded-2xl p-4 h-full">
                 {(isLoading || isSaving) && <DynamicLoader maintext={isSaving ? `${editingMenuId ? "Updating" : "Creating"} Menu...` : "Loading Menus..."} subtext="" />}
                 <div className={`flex ${showCreateForm ? "justify-start" : "justify-between"} items-center`}>
@@ -698,7 +698,7 @@ const Menus = () => {
                 onConfirm={confirmDeleteMenu}
                 onCancel={closeFullMenuDeleteModal}
             />
-        </Layout>
+        </>
     );
 };
 

@@ -1191,7 +1191,7 @@ const WebEditor = () => {
             )}
           </div>
           
-          <div className="w-[75%] h-full flex justify-center p-2 rounded-lg bg-gray-100 shadow overflow-hidden">
+          <div className="w-[75%] h-full flex justify-center p-2 rounded-lg shadow overflow-hidden">
             <div
               className={`relative w-full h-full overflow-hidden ${
                 deviceMode === "mobile" || deviceMode === "tablet"
@@ -1212,7 +1212,7 @@ const WebEditor = () => {
                   height: 
                   deviceMode === "desktop"
                       ? "100%"
-                      : "100%", 
+                      : "100%",
                 }}
                 className="border-none"
                 title="Responsive Preview"

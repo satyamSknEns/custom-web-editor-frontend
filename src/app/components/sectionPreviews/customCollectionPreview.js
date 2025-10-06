@@ -4,6 +4,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import CustomCollectionPopUp from "../popupPreviews/customCollectionPopup";
+import Image from "next/image";
 
 export const schema = {
   name: "Custom Collection",
@@ -108,7 +109,7 @@ export const schema = {
           type: "image",
           id: "collection_image",
           label: "Select Image",
-          default: "image/placeholder.jpg",
+          default: "/image/placeholder.jpg",
         },
         {
           type: "url",
@@ -289,13 +290,14 @@ const CustomCollectionPreview = ({ content, viewType }) => {
     <div className={`w-full ${layoutClasses}`}>
       {collectionsToDisplay.map((collection, index) => {
         const repeatImageNumber = (index % 3) + 1;
-        const imageSrc = collection.collection_image || `image/collection${repeatImageNumber}.svg`;
+        const imageSrc = collection.collection_image || `/image/collection${repeatImageNumber}.svg`;
         const content = (
           <>
-            <img 
+            <Image 
               src={imageSrc} 
               alt={collection.collection_title} 
-              width={1000} height={1000} 
+              width={1000} 
+              height={1000} 
               className={`w-full h-full transition-transform duration-500 opacity-80 rounded-full`} 
             />
             <p className={`font-medium lg:text-lg sm:text-base text-sm my-2 text-[#222] text-center`}>{collection.collection_title || `Collection's name`}</p>
@@ -322,11 +324,11 @@ const CustomCollectionPreview = ({ content, viewType }) => {
   const renderCarouselSlides = () => (
     collectionsToDisplay.map((collection, index) => {
       const repeatImageNumber = (index % 3) + 1;
-      const imageSrc = collection.collection_image || `image/collection${repeatImageNumber}.svg`;
+      const imageSrc = collection.collection_image || `/image/collection${repeatImageNumber}.svg`;
 
       const content = (
         <>
-          <img
+          <Image
             src={imageSrc}
             alt={collection.collection_title}
             width={1000}
@@ -361,7 +363,7 @@ const CustomCollectionPreview = ({ content, viewType }) => {
 
         const content = (
           <>
-            <img
+            <Image
               src={imageSrc}
               alt={collection.collection_title}
               width={1000}
@@ -401,7 +403,7 @@ const CustomCollectionPreview = ({ content, viewType }) => {
   return (
     <div className={`collection_list_section w-full max-h-full md:p-8 sm:p-5 px-2 mb-4 bg-white flex flex-col items-center justify-center rounded-lg`}>
 
-      <h2 className={`mb-4 text-2xl sm:text-3xl font-bold`}> {currentSectionHeading} </h2>
+      <h2 className={`mb-4 text-2xl sm:text-3xl font-bold text-black`}> {currentSectionHeading} </h2>
 
       {collectionsToDisplay.length > 0 ? (
         isMobileView ? (

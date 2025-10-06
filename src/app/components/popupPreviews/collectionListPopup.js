@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const CollectionListPopUp = ({ collectionsToDisplay, currentMainHeading }) => {
   return (
     <div className="collection_list_section w-full max-h-full h-56 p-4 shadow-md bg-white flex flex-col items-center justify-center rounded-lg">
@@ -9,7 +11,7 @@ const CollectionListPopUp = ({ collectionsToDisplay, currentMainHeading }) => {
               key={index}
               className="relative flex flex-col items-center justify-between border border-gray-200 rounded-md overflow-hidden shadow-sm aspect-[1/1] w-1/3 flex-shrink-0 bg-black/[0.05]"
             >
-              <img
+              <Image
                 src={
                   `/image/collection${index + 1}.svg` ||
                   collection.collection_image

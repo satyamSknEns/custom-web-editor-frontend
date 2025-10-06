@@ -17,7 +17,7 @@ const DeleteMenuModal = ({ show, menuToDelete, onConfirm, onCancel }) => {
                 </div>
                 <div className="w-full mt-2 p-4 border-b">
                     <p className="text-slate-500">
-                        Are you sure you want to delete the menu "<span className="font-semibold">{menuToDelete.title}</span>"? This action cannot be undone.
+                        Are you sure you want to delete the menu &quot;<span className="font-semibold">{menuToDelete.title}</span>&quot;? This action cannot be undone.
                     </p>
                 </div>
                 <div className="items-center p-3">

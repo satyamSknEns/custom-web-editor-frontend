@@ -1,3 +1,4 @@
+import Image from "next/image";
 
 const CustomCollectionPopUp = ({
   collectionsToDisplay,
@@ -16,7 +17,7 @@ const CustomCollectionPopUp = ({
 
             const content = (
               <>
-                <img
+                <Image
                   src={imageSrc}
                   alt={collection.collection_title}
                   width={400}

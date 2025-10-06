@@ -3,6 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { TextAnimationWrapper } from "../sectionPreviews/sliderBannerPreview";
 import { useCallback, useState } from "react";
+import Image from "next/image";
 
 const SliderBannerPopUp = ({ slidesToDisplay }) => {
   const CustomPrevArrow = ({ onClick }) => (
@@ -102,8 +103,10 @@ const SliderBannerPopUp = ({ slidesToDisplay }) => {
             const isCurrentSlide = index === activeSlideIndex;
             return (
               <div key={index} className="relative w-full h-full">
-                <img
+                <Image
                   src={slide.desktop_image}
+                  height={1000}
+                  width={1000}
                   alt="slider-placeholder"
                   className="w-full h-full object-cover"
                 />
