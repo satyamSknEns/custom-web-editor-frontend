@@ -1,4 +1,4 @@
-"use client";
+
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -108,7 +108,7 @@ export const schema = {
           type: "image",
           id: "collection_image",
           label: "Select Image",
-          default: "/image/placeholder.jpg",
+          default: "image/placeholder.jpg",
         },
         {
           type: "url",
@@ -283,13 +283,13 @@ const CustomCollectionPreview = ({ content, viewType }) => {
     ],
   };
 
-  const getMobileClasses = () => { return "grid grid-cols-1 md:grid-cols-3 gap-2"; };
+  const getMobileClasses = () => { return "grid grid-cols-2 sm:grid-cols-3 gap-4"; };
 
   const renderCollections = (layoutClasses) => (
     <div className={`w-full ${layoutClasses}`}>
       {collectionsToDisplay.map((collection, index) => {
         const repeatImageNumber = (index % 3) + 1;
-        const imageSrc = collection.collection_image || `/image/collection${repeatImageNumber}.svg`;
+        const imageSrc = collection.collection_image || `image/collection${repeatImageNumber}.svg`;
         const content = (
           <>
             <img 
@@ -298,7 +298,7 @@ const CustomCollectionPreview = ({ content, viewType }) => {
               width={1000} height={1000} 
               className={`w-full h-full transition-transform duration-500 opacity-80 rounded-full`} 
             />
-            <p className={`font-medium lg:text-lg sm:text-xs text-lg mb-2 text-[#222] text-center`}>{collection.collection_title || `Collection's name`}</p>
+            <p className={`font-medium lg:text-lg sm:text-base text-sm my-2 text-[#222] text-center`}>{collection.collection_title || `Collection's name`}</p>
           </>
         )
         if (collection.collection_link && collection.collection_link !== "#") {
@@ -322,7 +322,7 @@ const CustomCollectionPreview = ({ content, viewType }) => {
   const renderCarouselSlides = () => (
     collectionsToDisplay.map((collection, index) => {
       const repeatImageNumber = (index % 3) + 1;
-      const imageSrc = collection.collection_image || `/image/collection${repeatImageNumber}.svg`;
+      const imageSrc = collection.collection_image || `image/collection${repeatImageNumber}.svg`;
 
       const content = (
         <>
@@ -333,7 +333,7 @@ const CustomCollectionPreview = ({ content, viewType }) => {
             height={1000}
             className={`w-full h-full transition-transform duration-500 opacity-80 rounded-full`}
           />
-          <p className={`font-medium lg:text-lg sm:text-xs text-lg mb-2 text-[#222] text-center`}>{collection.collection_title || `Collection's name`}</p>
+          <p className={`font-medium lg:text-lg sm:text-base text-sm my-2 text-[#222] text-center`}>{collection.collection_title || `Collection's name`}</p>
         </>
       )
       if (collection.collection_link && collection.collection_link !== "#") {
@@ -368,7 +368,7 @@ const CustomCollectionPreview = ({ content, viewType }) => {
               height={1000}
               className={`w-full h-full transition-transform duration-500 opacity-80 rounded-full`}
             />
-            <p className={`font-medium lg:text-base sm:text-sm text-lg mb-2 text-[#222] text-center`}>{collection.collection_title || `Collection's name`}</p>
+            <p className={`font-medium lg:text-base sm:text-sm text-sm mb-2 text-[#222] text-center`}>{collection.collection_title || `Collection's name`}</p>
           </>
         )
         if (collection.collection_link && collection.collection_link !== "#") {
@@ -399,7 +399,7 @@ const CustomCollectionPreview = ({ content, viewType }) => {
     }
 
   return (
-    <div className={`collection_list_section w-full max-h-full sm:p-8 mb-4 bg-white flex flex-col items-center justify-center rounded-lg`}>
+    <div className={`collection_list_section w-full max-h-full md:p-8 sm:p-5 px-2 mb-4 bg-white flex flex-col items-center justify-center rounded-lg`}>
 
       <h2 className={`mb-4 text-2xl sm:text-3xl font-bold`}> {currentSectionHeading} </h2>
 

@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import GalleryPopUp from "../popupPreviews/galleryPopup";
 export const schema = {
@@ -133,7 +132,7 @@ const GalleryPreview = ({ content, viewType }) => {
   }
   return (
     <div
-      className={`relative flex flex-col items-center justify-center rounded-md bg-white w-full sm:max-${galleryContainerHeightClass} sm:${galleryContainerHeightClass} sm:p-8 mb-4`}
+      className={`relative flex flex-col items-center justify-center rounded-md bg-white w-full sm:max-${galleryContainerHeightClass} sm:${galleryContainerHeightClass} md:p-8 sm:p-5 p-3`}
     >
       {currentHeading && currentHeading !== "" && (
         <h3 className={`text-center mb-4 text-3xl font-bold`}>

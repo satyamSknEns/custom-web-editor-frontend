@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect, useCallback } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -231,7 +230,7 @@ const SliderBannerPreview = ({ content, viewType, isLoadingFields }) => {
       <div
         style={{
           position: "absolute",
-          bottom: sliderWidth > 640 ?'20px' : '2px',
+          bottom: sliderWidth > 640 ?'20px' : '5px',
           left: 0,
           right: 0,
           width: "100%",

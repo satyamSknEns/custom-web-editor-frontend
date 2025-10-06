@@ -15,7 +15,7 @@ const GalleryPopUp = ({ currentHeading, itemsToDisplay }) => {
             className={`group relative overflow-hidden rounded-md border border-slate-300 w-1/3 aspect-[4/3]`}
           >
             <img
-              src={item.image || "/image/placeholder.jpg"}
+              src={item.image || "image/placeholder.jpg"}
               alt={`Gallery item ${index + 1}`}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 opacity-80"
             />

@@ -724,7 +724,7 @@ const WebEditor = () => {
   const createPageSections = async (payload) => {
     setIsSaving(true);
     const config = {
-      url: `${apiurl}/api/webEditor`,
+      url: `${apiurl}/webEditor`,
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -750,7 +750,7 @@ const WebEditor = () => {
   const fetchPageSections = async (categoryName) => {
     setIsSaving(true);
     const config = {
-      url: `${apiurl}/api/webEditor?categoryName=${categoryName}`,
+      url: `${apiurl}/webEditor?categoryName=${categoryName}`,
       method: "get",
       headers: {
         "Content-Type": "application/json",
@@ -1191,7 +1191,7 @@ const WebEditor = () => {
             )}
           </div>
           
-          <div className="w-[75%] h-full p-2 flex justify-center border rounded-lg shadow overflow-hidden">
+          <div className="w-[75%] h-full flex justify-center p-2 rounded-lg bg-gray-100 shadow overflow-hidden">
             <div
               className={`relative w-full h-full overflow-hidden ${
                 deviceMode === "mobile" || deviceMode === "tablet"
@@ -1201,7 +1201,7 @@ const WebEditor = () => {
             >
               <iframe
                 ref={iframeRef}
-                src="/admin/preview"
+                src="/pages/page-preview"
                 style={{
                   width:
                     deviceMode === "mobile"

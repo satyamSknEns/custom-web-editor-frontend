@@ -1,6 +1,5 @@
-"use client";
 import { useState, useEffect, useRef } from "react";
-import { apiurl } from "../../../config/config.js";
+import { apiurl } from "../../../config/config";
 import {
   FaFacebook,
   FaInstagram,
@@ -275,7 +274,7 @@ const FooterPreview = ({ content, viewType }) => {
       } else if (menuId && !fetchedMenuIds.current[menuId]) {
         promisesToRun.push(
           axios
-            .get(`${apiurl}/api/webMenu/menu/${menuId}`)
+            .get(`${apiurl}/webMenu/menu/${menuId}`)
             .then((response) => {
               const fetchedData = {
                 title: menuTitle,
@@ -424,7 +423,7 @@ const FooterPreview = ({ content, viewType }) => {
       <div className="mx-auto">
         {isDesktop ? (
           <>
-            <div className={`grid grid-cols-${filteredMenus.length+1} gap-8 mb-4 px-4`}>
+            <div className={`flex items-start justify-between gap-8 mb-4 px-4`}>
               <div className="md:col-span-1">
                 {getVal("is_logo") && getVal("logo_image") && (
                   <img
