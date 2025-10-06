@@ -1,5 +1,6 @@
 import React from "react";
 import GalleryPopUp from "../popupPreviews/galleryPopup";
+import Image from "next/image";
 export const schema = {
   name: "Gallery Section",
   max_items: 3,
@@ -135,7 +136,7 @@ const GalleryPreview = ({ content, viewType }) => {
       className={`relative flex flex-col items-center justify-center rounded-md bg-white w-full sm:max-${galleryContainerHeightClass} sm:${galleryContainerHeightClass} md:p-8 sm:p-5 p-3`}
     >
       {currentHeading && currentHeading !== "" && (
-        <h3 className={`text-center mb-4 text-3xl font-bold`}>
+        <h3 className={`text-center mb-4 text-3xl font-bold text-black`}>
           {currentHeading}
         </h3>
       )}
@@ -143,8 +144,10 @@ const GalleryPreview = ({ content, viewType }) => {
         {itemsToDisplay.map((item, index) => {
           const itemContent = (
             <>
-              <img
+              <Image
                 src={item.image || "/image/placeholder.jpg"}
+                height={1000}
+                width={1000}
                 alt={`Gallery item ${index + 1}`}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 opacity-80"
               />

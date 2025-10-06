@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const GalleryPopUp = ({ currentHeading, itemsToDisplay }) => {
@@ -14,8 +15,10 @@ const GalleryPopUp = ({ currentHeading, itemsToDisplay }) => {
             key={index}
             className={`group relative overflow-hidden rounded-md border border-slate-300 w-1/3 aspect-[4/3]`}
           >
-            <img
+            <Image
               src={item.image || "image/placeholder.jpg"}
+              height={500}
+              width={500}
               alt={`Gallery item ${index + 1}`}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 opacity-80"
             />

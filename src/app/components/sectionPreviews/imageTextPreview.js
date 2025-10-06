@@ -1,5 +1,6 @@
 import React from "react";
 import ImageTextPopUp from "../popupPreviews/imageTextPopup";
+import Image from "next/image";
 
 export const schema = {
   name: "Image With Text",
@@ -83,7 +84,7 @@ const ImageTextPreview = ({ content, viewType }) => {
         <div
           className={`w-full sm:w-1/2 bg-gray-100 flex items-center justify-center border border-slate-400`}
         >
-          <img
+          <Image
             src={imageUrl || "/image/placeholder.jpg"}
             alt="Image-With-Text"
             width={1000}
@@ -98,7 +99,7 @@ const ImageTextPreview = ({ content, viewType }) => {
         >
           {headingText !== "" && (
             <p
-              className={`mb-2 text-center text-xl lg:text-3xl sm:text-2xl font-medium`}
+              className={`mb-2 text-center text-xl lg:text-3xl sm:text-2xl font-medium text-black`}
             >
               {headingText}
             </p>

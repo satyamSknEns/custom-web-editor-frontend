@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import CollectionListPopUp from "../popupPreviews/collectionListPopup";
+import Image from "next/image";
 
 export const schema = {
   name: "Collection List",
@@ -295,7 +296,7 @@ const CollectionListPreview = ({ content, viewType }) => {
         const imageSrc = collection.collection_image || `/image/collection${repeatImageNumber}.svg`;
         return (
           <a key={index} href={`/collections/${formatCollectionTitleForUrl(collection.collection_title)}`} className={`relative flex flex-col items-center justify-between border border-gray-200 rounded-md overflow-hidden shadow-sm aspect-[1/1] w-full group`}>
-            <img
+            <Image
               src={imageSrc}
               alt={collection.collection_title}
               width={1000}
@@ -316,8 +317,8 @@ const CollectionListPreview = ({ content, viewType }) => {
     collectionsToDisplay.map((collection, index) => (
       <div key={index} className="px-1 outline-none">
         <a href={`/collections/${formatCollectionTitleForUrl(collection.collection_title)}`} className="relative flex flex-col items-center justify-between border border-gray-200 rounded-md overflow-hidden shadow-sm aspect-[1/1] group">
-          <img
-            src={collection.collection_image || "image/placeholder.jpg"}
+          <Image
+            src={collection.collection_image || "/image/placeholder.jpg"}
             alt={collection.collection_title}
             width={1000}
             height={1000}
@@ -350,7 +351,7 @@ const CollectionListPreview = ({ content, viewType }) => {
   return (
     <div className={`collection_list_section w-full max-h-full md:p-8 sm:p-5 p-3 mb-4 bg-white flex flex-col items-center justify-center rounded-lg px-3`}>
 
-      <h2 className={`mb-4 text-2xl sm:text-3xl font-bold`}>
+      <h2 className={`mb-4 text-2xl sm:text-3xl font-bold text-black`}>
         {currentMainHeading}
       </h2>
 
