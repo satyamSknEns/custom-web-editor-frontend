@@ -112,7 +112,7 @@ const Header = ({
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
           >
-            <Link href="/">
+            <Link href="/admin/dashboard">
               <CiLogout className="text-lg mr-2" />
             </Link>
           </div>

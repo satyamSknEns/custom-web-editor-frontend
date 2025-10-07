@@ -7,11 +7,11 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-100 text-gray-700 px-6 py-4 mt-10 shadow-inner">
+    <footer className="bg-gray-100 text-gray-700 px-6 py-4 shadow-inner">
       <div className="flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="text-xl font-bold text-blue-600">
           <Link href="/">
-            <Image src="/logo.png" alt="logo" width={100} height={50} />
+            <Image src="/image/logo.png" alt="logo" width={100} height={50} />
           </Link>
         </div>
 

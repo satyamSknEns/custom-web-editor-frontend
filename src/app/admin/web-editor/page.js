@@ -1201,7 +1201,7 @@ const WebEditor = () => {
             >
               <iframe
                 ref={iframeRef}
-                src="/pages/page-preview"
+                src="/admin/page-preview"
                 style={{
                   width:
                     deviceMode === "mobile"

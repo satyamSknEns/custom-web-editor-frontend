@@ -4,13 +4,11 @@ import { usePathname } from "next/navigation";
 const RouteHandler = ({ header, footer, children }) => {
   const pathname = usePathname();
 
-  const showHeader =
-    pathname !== "/pages/web-editor" && pathname !== "/pages/page-preview";
+  const showHeader = !pathname.startsWith("/admin");
   const showFooter =
     pathname !== "/login" &&
     pathname !== "/register" &&
-    pathname !== "/pages/web-editor" &&
-    pathname !== "/pages/page-preview";
+    !pathname.startsWith("/admin");
 
   return (
     <>
