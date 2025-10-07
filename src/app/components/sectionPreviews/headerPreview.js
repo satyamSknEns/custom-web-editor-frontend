@@ -12,7 +12,7 @@ import { apiurl } from '../../../config/config';
 import HeaderPopUp from '../popupPreviews/headerPopup';
 
 export const schema = {
-  name: 'Header Section',
+  name: 'Header',
   max_items: 7,
   min_items: 4,
   default_items: 4,

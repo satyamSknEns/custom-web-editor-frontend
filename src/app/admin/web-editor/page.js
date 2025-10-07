@@ -11,7 +11,17 @@ import { TbSlideshow } from "react-icons/tb";
 import { BsDatabaseAdd, BsImages } from "react-icons/bs";
 import { GoPlusCircle } from "react-icons/go";
 import { RxDragHandleDots2, RxSection } from "react-icons/rx";
-import { ImageTextPreview, GalleryPreview, SliderBannerPreview, CollectionListPreview, CustomCollectionPreview, AnnouncementBarPreview, HeaderPreview, FooterPreview, NewsletterPreview } from "../../components/sectionPreviews";
+import {
+  ImageTextPreview,
+  GalleryPreview,
+  SliderBannerPreview,
+  CollectionListPreview,
+  CustomCollectionPreview,
+  AnnouncementBarPreview,
+  HeaderPreview,
+  FooterPreview,
+  NewsletterPreview
+} from "../../components/sectionPreviews";
 import { schema as HeaderSchema } from "../../components/sectionPreviews/headerPreview";
 import { schema as ImageTextSchema } from "../../components/sectionPreviews/imageTextPreview";
 import { schema as GallerySchema } from "../../components/sectionPreviews/galleryPreview";
@@ -25,7 +35,6 @@ import Header from "./header/header";
 import SectionEditorForm from "./formEditor/sectionEditorForm";
 import { apiurl } from "../../../config/config";
 import axios from "axios";
-import SectionsRenderer from "../../components/sectionPreviews/sectionsRenderer";
 
 const sectionComponents = {
   announcement_bar: {
@@ -316,24 +325,13 @@ const WebEditor = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [deviceMode, setDeviceMode] = useState("desktop");
-  const [width, setWidth] = useState("100%");
+  const [isIframeLoaded, setIsIframeLoaded] = useState(false);
   const sidebarRef = useRef(null);
   const popupRef = useRef(null);
-
   const uniqueIdRef = React.useRef(0);
   const [selectedSection, setSelectedSection] = useState(null);
   const [sectionContent, setSectionContent] = useState({});
   const [fieldLoadingStatus, setFieldLoadingStatus] = useState({});
-  const sectionRefs = useRef({});
-
-  // useEffect(() => {
-  //   if (selectedSection && sectionRefs.current[selectedSection.id]) {
-  //     sectionRefs.current[selectedSection.id].scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "center",
-  //     });
-  //   }
-  // }, [selectedSection]);
 
   const generateUniqueId = () => {
     uniqueIdRef.current += 1;
@@ -360,23 +358,6 @@ const WebEditor = () => {
     sectionContent,
   });
 
-  // const handleAddSection = (sectionId) => {
-  //   const newAddedSection = { id: generateUniqueId(), sectionId };
-
-  //   pushToUndoStack(currentEditorState());
-  //   const defaultContent = sectionComponents[sectionId]?.defaultContent || {};
-
-  //   setSectionContent((prev) => ({
-  //     ...prev,
-  //     [newAddedSection.id]: JSON.parse(JSON.stringify(defaultContent)),
-  //   }));
-
-  //   pushToUndoStack(currentEditorState());
-  //   setAddedSections([...addedSections, newAddedSection]);
-  //   setSelectedSection(newAddedSection);
-  //   setShowSectionPopup(false);
-  //   setHoveredSection(null);
-  // };
   const handleAddSection = (sectionId) => {
     const newAddedSection = { id: generateUniqueId(), sectionId };
     const defaultContent = sectionComponents[sectionId]?.defaultContent || {};
@@ -433,32 +414,17 @@ const WebEditor = () => {
     hoveredSectionInMainView,
     fieldLoadingStatus,
   ]);
-  // useEffect(() => {
-  //   if (selectedSection && iframeRef?.current && iframeRef?.current?.contentWindow) {
-  //     console.log("Sending scroll to section:", selectedSection.id); // Debug log
-  //     iframeRef.current.contentWindow.postMessage(
-  //       {
-  //         source: "web-editor-scroll",
-  //         sectionId: selectedSection.id, // Use the instance ID (e.g., 'added-section-1')
-  //       },
-  //       "*"
-  //     );
-  //   }
-  //   // Auto-switch to content tab when section is selected
-  //   if (selectedSection) {
-  //     setActiveTab("content");
-  //   }
-  // }, [selectedSection]);
+
   useEffect(() => {
     if (
       selectedSection &&
       iframeRef.current &&
       iframeRef.current.contentWindow
     ) {
-      // console.log("Preparing to send scroll to section:", selectedSection.id);
+      console.log("Preparing to send scroll to section:", selectedSection.id);
       // Add a slight delay to ensure iframe has rendered the new section
       setTimeout(() => {
-        // console.log("Sending scroll to section:", selectedSection.id);
+        console.log("Sending scroll to section:", selectedSection.id);
         iframeRef.current.contentWindow.postMessage(
           {
             source: "web-editor-scroll",
@@ -473,31 +439,6 @@ const WebEditor = () => {
     }
   }, [selectedSection]);
 
-  // useEffect(() => {
-  //   const handleMessage = (event) => {
-  //     if (event.source === iframeRef?.current?.contentWindow) {
-  //       if (event.data.source === "preview-page-select") {
-  //         const { instanceId } = event.data;
-  //         const section = addedSections.find((s) => s.id === instanceId);
-  //         if (section) {
-  //           console.log("Selecting section from iframe:", section.id);
-  //           setSelectedSection(section);
-  //           setActiveTab("content");
-  //         } else {
-  //           console.warn("No section found for instanceId:", instanceId);
-  //         }
-  //       } else if (event.data.source === "preview-page-drag-end") {
-  //         const { addedSections: newSections } = event.data;
-  //         console.log("Received drag-end update:", newSections);
-  //         pushToUndoStack(currentEditorState());
-  //         setAddedSections(newSections);
-  //       }
-  //     }
-  //   };
-  //   window.addEventListener("message", handleMessage);
-  //   return () => window.removeEventListener("message", handleMessage);
-  // }, [addedSections, currentEditorState, pushToUndoStack]);
-
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.source === iframeRef?.current?.contentWindow) {
@@ -505,7 +446,7 @@ const WebEditor = () => {
           const { instanceId } = event.data;
           const section = addedSections.find((s) => s.id === instanceId);
           if (section) {
-            // console.log("Selecting section from iframe:", section.id);
+            console.log("Selecting section from iframe:", section.id);
             setSelectedSection(section);
             setActiveTab("content");
           } else {
@@ -513,12 +454,12 @@ const WebEditor = () => {
           }
         } else if (event.data.source === "preview-page-drag-end") {
           const { addedSections: newSections } = event.data;
-          // console.log("Received drag-end update:", newSections);
+          console.log("Received drag-end update:", newSections);
           pushToUndoStack(currentEditorState());
           setAddedSections(newSections);
         } else if (event.data.source === "preview-ready") {
           // Iframe is ready - send current preview data
-          // console.log("Iframe ready, sending current preview data");
+          console.log("Iframe ready, sending current preview data");
           if (iframeRef.current && iframeRef.current.contentWindow) {
             const previewData = {
               source: "web-editor-preview",
@@ -534,7 +475,7 @@ const WebEditor = () => {
         }
       }
     };
-  
+
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, [addedSections, currentEditorState, pushToUndoStack]);
@@ -632,10 +573,10 @@ const WebEditor = () => {
         return <BsCollection />;
       case "custom_collection":
         return <RiImageCircleAiLine />;
-      case "newsletter_section":
-        return <BsDatabaseAdd />;
       case "footer_section":
         return <RxSection />;
+      case "newsletter_section":
+        return <TbSlideshow />;
       default:
         return null;
     }
@@ -897,7 +838,7 @@ const WebEditor = () => {
         <div className="flex item-center justify-center h-[90vh]">
           <div
             ref={sidebarRef}
-            className="w-[25%] flex items-start bg-white py-4 relative"
+            className="w-[25%] flex items-start bg-white pb-4 relative"
           >
             <div className="flex items-center flex-col gap-4 border-r-[1px] p-12 border-slate-200 w-[25%] h-full">
               {["content", "components", "settings"].map((tab) => (
@@ -922,7 +863,7 @@ const WebEditor = () => {
               ))}
             </div>
 
-            <div className="w-[75%] px-2 flex h-full mx-auto overflow-y-auto slide-to-top">
+            <div className="w-[75%] px-2 flex h-full mx-auto overflow-y-auto slide-to-top [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
               {activeTab === "content" && (
                 <>
                   {selectedSection && sectionContent[selectedSection.id] ? (
@@ -962,11 +903,17 @@ const WebEditor = () => {
                             {...provided.droppableProps}
                             ref={provided.innerRef}
                           >
-                            <div className="flex flex-col mt-8 w-full text-xs">
-                              {addedSections.length === 0 ? (
-                                <p className="text-gray-400 p-2">
-                                  No sections added yet.
-                                </p>
+                            <div className="flex flex-col w-full text-xs">
+                              {/* {addedSections.length === 0 ? ( */}
+                              {!isIframeLoaded ? (
+                                <div className="flex flex-col gap-2 animate-pulse">
+                                  {[...Array(13)].map((_, i) => (
+                                    <div
+                                      key={i}
+                                      className="h-9 w-full rounded-lg border border-slate-200 bg-gray-100"
+                                    ></div>
+                                  ))}
+                                </div>
                               ) : (
                                 addedSections.map(
                                   ({ id, sectionId }, index) => {
@@ -1106,38 +1053,28 @@ const WebEditor = () => {
                     placeholder="Search"
                     className="w-full border border-slate-300 rounded-lg py-1.5 px-2 text-gray-600 text-sm outline-none focus:border-slate-500 transition-all"
                   />
-                  <h4 className="text-sm font-semibold text-gray-700 my-3">
-                    {" "}
-                    Sections{" "}
-                  </h4>
+                  <h4 className="text-sm font-semibold text-gray-700 my-3"> Sections </h4>
                   <ul className="space-y-1">
                     {Object.keys(sectionComponents).map((sectionIdKey) => {
-                      const sectionSchema =
-                        sectionComponents[sectionIdKey]?.schema;
+                      const sectionSchema = sectionComponents[sectionIdKey]?.schema;
                       if (!sectionSchema) return null;
 
                       return (
                         <li key={sectionIdKey}>
-                          {" "}
                           <button
                             onClick={() => handleAddSection(sectionIdKey)}
                             onMouseEnter={() => setHoveredSection(sectionIdKey)}
                             className="w-full text-left px-3 py-1 text-sm rounded-md text-gray-700 hover:bg-gray-100 flex justify-start items-center cursor-pointer outline-none"
                           >
-                            {" "}
                             <span className="w-4 h-4 pt-0.5">
                               {sectionIcon(sectionIdKey)}
-                            </span>{" "}
+                            </span>
                             <div className="flex items-center justify-between w-full">
-                              {" "}
                               <span className="ml-2">
-                                {" "}
-                                {formatSectionLabel(
-                                  sectionSchema.name || sectionIdKey
-                                )}{" "}
-                              </span>{" "}
-                            </div>{" "}
-                          </button>{" "}
+                                {formatSectionLabel( sectionSchema.name || sectionIdKey )}
+                              </span>
+                            </div>
+                          </button>
                         </li>
                       );
                     })}
@@ -1152,69 +1089,68 @@ const WebEditor = () => {
                       () => hoveredSection && handleAddSection(hoveredSection)
                     )
                   ) : (
-                    <p className="text-gray-500">
-                      {" "}
-                      Select or hover over a section to preview.{" "}
-                    </p>
+                    <p className="text-gray-500"> Select or hover over a section to preview. </p>
                   )}
                 </div>
               </div>
             )}
           </div>
-
-          <div className="w-[71%] p-2 bg-gray-100 relative hidden">
-            {isSaving && (
-              <div className="absolute inset-0 bg-black/20 opacity-80 z-20 flex items-center justify-center">
-                {" "}
+          <div className="w-[75%] relative h-full p-2 flex justify-center rounded-lg overflow-hidden">
+            {!isIframeLoaded && (
+              <div className="absolute inset-0 flex flex-col z-10 gap-1 p-2">
+                <div className="h-12 bg-gray-200 animate-pulse flex items-center justify-center">
+                  <div className="w-2/4 h-4 bg-gray-300 rounded"></div>
+                </div>
+                <div className="h-24 bg-gray-200 animate-pulse flex justify-between items-center px-4">
+                  <div className="w-32 h-8 bg-gray-300 rounded"></div>
+                  <div className="ml-auto flex space-x-4">
+                    <div className="w-20 h-4 bg-gray-300 rounded"></div>
+                    <div className="w-20 h-4 bg-gray-300 rounded"></div>
+                    <div className="w-20 h-4 bg-gray-300 rounded"></div>
+                    <div className="w-20 h-4 bg-gray-300 rounded"></div>
+                  </div>
+                  <div className="ml-auto flex space-x-4">
+                    <div className="w-40 h-4 bg-gray-300 rounded"></div>
+                    <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
+                  </div>
+                </div>
+                <div className="h-96 relative bg-gray-200 animate-pulse flex items-center justify-center">
+                  <div className="w-full h-full bg-gray-200 rounded flex flex-col items-center justify-center">
+                    <div className="w-48 h-8 bg-gray-300 rounded mb-2"></div>
+                    <div className="w-64 h-4 bg-gray-300 rounded mb-4"></div>
+                    <div className="w-32 h-10 bg-gray-300 rounded"></div>
+                  </div>
+                  <div className="absolute left-4 bg-gray-300 bg-opacity-50 p-4 rounded-full "></div>
+                  <div className="absolute right-4 bg-gray-300 bg-opacity-50 p-4 rounded-full "></div>
+                </div>
+                <div className="h-80 bg-gray-200 animate-pulse flex">
+                  <div className="w-1/2 h-full bg-gray-300"></div>
+                  <div className="w-1/2 p-8 flex flex-col justify-center">
+                    <div className="w-3/4 h-6 bg-gray-300 rounded mb-4"></div>
+                    <div className="w-full h-4 bg-gray-300 rounded mb-2"></div>
+                    <div className="w-full h-4 bg-gray-300 rounded mb-2"></div>
+                    <div className="w-32 h-10 bg-gray-300 rounded"></div>
+                  </div>
+                </div>
               </div>
             )}
-            {addedSections.filter(({ id }) => !hiddenSections.includes(id))
-              .length === 0 ? (
-              <div className="text-center text-gray-400 mt-10">
-                No sections to display. You may have hidden all sections.
-              </div>
-            ) : (
-              <SectionsRenderer
-                addedSections={addedSections}
-                hiddenSections={hiddenSections}
-                sectionContent={sectionContent}
-                selectedSection={selectedSection}
-                hoveredSectionInMainView={hoveredSectionInMainView}
-                fieldLoadingStatus={fieldLoadingStatus}
-                sectionRefs={sectionRefs}
-                onDragEnd={onDragEnd}
-                setSelectedSection={setSelectedSection}
-                setHoveredSectionInMainView={setHoveredSectionInMainView}
-                renderSectionPreview={renderSectionPreview}
-                formatSectionLabel={formatSectionLabel}
-              />
-            )}
-          </div>
-          
-          <div className="w-[75%] h-full flex justify-center p-2 rounded-lg shadow overflow-hidden">
             <div
-              className={`relative w-full h-full overflow-hidden ${
-                deviceMode === "mobile" || deviceMode === "tablet"
-                  ? "flex justify-center"
-                  : ""
-              }`}
+              className={`relative w-full h-full overflow-hidden ${ deviceMode === "mobile" || deviceMode === "tablet" ? "flex justify-center" : "" }`}
             >
               <iframe
                 ref={iframeRef}
                 src="/admin/page-preview"
+                onLoad={() => setIsIframeLoaded(true)}
                 style={{
                   width:
                     deviceMode === "mobile"
                       ? "375px"
                       : deviceMode === "tablet"
                       ? "768px"
-                      : "100%", 
-                  height: 
-                  deviceMode === "desktop"
-                      ? "100%"
                       : "100%",
+                  height: deviceMode === "desktop" ? "100%" : "100%",
                 }}
-                className="border-none"
+                className="border-none transition-all duration-500 ease-in-out"
                 title="Responsive Preview"
               />
             </div>
