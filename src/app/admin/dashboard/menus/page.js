@@ -21,7 +21,7 @@ import {
     useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { DynamicLoader } from "../../components/loader";
+import { DynamicLoader } from "../../../components/loader";
 import { useMenusApi } from "./useMenusApi";
 import DeleteMenuItemModal from "./deleteMenuItemModal";
 import DeleteMenuModal from "./deleteMenuModal";

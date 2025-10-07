@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { apiurl } from '../../../config/config.js';
+import { apiurl } from '../../../../config/config.js';
 import axios from 'axios';
 
 export const useMenusApi = () => {

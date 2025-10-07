@@ -14,11 +14,11 @@ const Header = () => {
           href={"/"}
           className="flex items-center cursor-pointer outline-none"
         >
-          <Image src="/logo.png" alt="Logo" width={120} height={40} />
+          <Image src="/image/logo.png" alt="Logo" width={120} height={40} />
         </Link>
 
         <nav className="hidden md:flex space-x-6 text-gray-700 font-medium">
-          {["Makeup", "Skin", "Hair", "Bath & Body", "Fragrance", "Editor"].map(
+          {["Makeup", "Skin", "Hair", "Bath & Body", "Fragrance", "Dashboard"].map(
             (item) => (
               <Link
                 href={
@@ -26,8 +26,8 @@ const Header = () => {
                     ? "/products"
                     : item === "Skin"
                     ? "/collection"
-                    : item === "Editor"
-                    ? "/pages/web-editor"
+                    : item === "Dashboard"
+                    ? "/admin/dashboard"
                     : "/"
                 }
                 key={item}
