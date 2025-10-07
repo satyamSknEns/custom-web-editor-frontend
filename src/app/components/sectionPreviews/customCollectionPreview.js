@@ -160,10 +160,9 @@ const CustomCollectionPreview = ({ content, viewType }) => {
   const [sliderWidth, setSliderWidth] = useState(0);
   const getDefault = (id) => schema.settings.find((s) => s.id === id)?.default;
   const getVal = (id) => content?.[id] ?? getDefault(id);
-  // const customCollectionsItemsField = schema.settings.find((s) => s.id === 'items' && s.type === "array" )?.itemFields;
-  // const getItemDefault = (id) => customCollectionsItemsField.find(f => f.id === id)?.default;
 
-  const isMobileView = sliderWidth < 980;
+  const isMobileView = sliderWidth < 641;
+  const isTabletView = sliderWidth >= 641 && sliderWidth < 1024;
   const currentSectionHeading = getVal("section_heading");
   const currentDesktopLayout = getVal("desktop_layout");
   const currentDesktopSlidesToShow = getVal("desktop_slides_to_show");
@@ -243,8 +242,49 @@ const CustomCollectionPreview = ({ content, viewType }) => {
     ],
   };
 
-  const disableDesktopCarousel = collectionsToDisplay.length <= currentDesktopSlidesToShow;
+  const disableTabletCarousel = collectionsToDisplay.length <= currentTabletSlidesToShow;
+  const tabletCarouselSettings = {
+    dots: !disableTabletCarousel,
+    infinite: !disableTabletCarousel,
+    speed: 500,
+    slidesToShow: currentTabletSlidesToShow,
+    slidesToScroll: 1,
+    autoplay: currentMobileAutoplayEnabled,
+    autoplaySpeed: currentSlideDuration * 1000,
+    arrows: !disableTabletCarousel,
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
+    customPaging: (i) => (
+      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 bg-white rounded-full cursor-pointer border-[1px] hover:bg-[#de3c3a] list_items border-[#de3c3a]`} style={{ margin: "0 5px" }} />
+    ),
+    appendDots: (dots) => (
+      <div style={{ position: "absolute", bottom: "-20px", left: 0, right: 0, width: "100%", display: "flex", justifyContent: "center", }} >
+        <ul style={{ margin: "0px", padding: "0px", display: "flex", justifyContent: "center", }} className={`custom-slick-dots`} >
+          {dots}
+        </ul>
+      </div>
+    ),
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: currentTabletSlidesToShow,
+          dots: true,
+          arrows: !disableTabletCarousel,
+        },
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: currentMobileSlidesToShow,
+          dots: true,
+          arrows: false,
+        },
+      },
+    ],
+  };
 
+  const disableDesktopCarousel = collectionsToDisplay.length <= currentDesktopSlidesToShow;
   const desktopCarouselSettings = {
     dots: !disableDesktopCarousel,
     infinite: !disableDesktopCarousel,
@@ -409,11 +449,19 @@ const CustomCollectionPreview = ({ content, viewType }) => {
         isMobileView ? (
           currentMobileLayout === "carousel" ? (
             <div className="w-full relative">
-              <Slider {...mobileCarouselSettings}>
-                {renderCarouselSlides()}
-              </Slider>
+              <Slider {...mobileCarouselSettings}>{renderCarouselSlides()}</Slider>
             </div>
-          ) : (renderCollections(getMobileClasses()))
+          ) : (
+            renderCollections(getMobileClasses())
+          )
+        ) : isTabletView ? (
+          currentMobileLayout === "carousel" ? (
+            <div className="w-full relative">
+              <Slider {...tabletCarouselSettings}>{renderCarouselSlides()}</Slider>
+            </div>
+          ) : (
+            renderCollections("grid grid-cols-3 gap-4")
+          )
         ) : (
           currentDesktopLayout === 'rows' ? (
             renderRowsCollections()

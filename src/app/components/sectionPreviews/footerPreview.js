@@ -14,7 +14,7 @@ import axios from "axios";
 import FooterPopUp from "../popupPreviews/footerPopup";
 
 export const schema = {
-  name: "Footer Section",
+  name: "Footer",
   settings: [
     {
       type: "color",

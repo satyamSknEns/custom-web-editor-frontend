@@ -90,7 +90,7 @@ export const schema = {
       id: "tablet_slides_to_show",
       label: "Tablet Slides to Show",
       default: 3,
-      min: 3,
+      min: 2,
       max: 5,
       step: 1,
       unit: "slides",
@@ -155,7 +155,8 @@ const CollectionListPreview = ({ content, viewType }) => {
   const getDefault = (id) => schema.settings.find((s) => s.id === id)?.default;
   const getVal = (id) => content?.[id] ?? getDefault(id);
 
-  const isMobileView = sliderWidth < 980;
+  const isMobileView = sliderWidth < 641;
+  const isTabletView = sliderWidth >= 641 && sliderWidth < 1024;
   const currentMainHeading = getVal("main_heading");
   const currentDesktopLayout = getVal("desktop_layout");
   const currentDesktopGridCols = getVal("desktop_grid_cols");
@@ -237,6 +238,48 @@ const CollectionListPreview = ({ content, viewType }) => {
     ],
   };
 
+  const disableTabletCarousel = collectionsToDisplay.length <= currentTabletSlidesToShow;
+  const tabletCarouselSettings = {
+    dots: !disableTabletCarousel,
+    infinite: !disableTabletCarousel,
+    speed: 500,
+    slidesToShow: currentTabletSlidesToShow,
+    slidesToScroll: 1,
+    autoplay: currentMobileAutoplayEnabled,
+    autoplaySpeed: currentSlideDuration * 1000,
+    arrows: !disableTabletCarousel,
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
+    customPaging: (i) => (
+      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 bg-white rounded-full cursor-pointer border-[1px] hover:bg-[#de3c3a] list_items border-[#de3c3a]`} style={{ margin: "0 5px" }} />
+    ),
+    appendDots: (dots) => (
+      <div style={{ position: "absolute", bottom: "-20px", left: 0, right: 0, width: "100%", display: "flex", justifyContent: "center", }} >
+        <ul style={{ margin: "0px", padding: "0px", display: "flex", justifyContent: "center", }} className={`custom-slick-dots`} >
+          {dots}
+        </ul>
+      </div>
+    ),
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: currentTabletSlidesToShow,
+          dots: true,
+          arrows: !disableTabletCarousel,
+        },
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: currentMobileSlidesToShow,
+          dots: true,
+          arrows: false,
+        },
+      },
+    ],
+  };
+
   const disableDesktopCarousel = collectionsToDisplay.length <= currentDesktopSlidesToShow;
 
   const desktopCarouselSettings = {
@@ -287,10 +330,10 @@ const CollectionListPreview = ({ content, viewType }) => {
     }
   };
 
-  const getMobileClasses = () => { return "grid grid-cols-1 md:grid-cols-3 gap-4"; };
+  const getMobileClasses = () => { return "grid grid-cols-1 sm:grid-cols-3 gap-4"; };
 
   const renderCollections = (layoutClasses) => (
-    <div className={`w-full grid grid-cols-1 sm:grid-cols-3 gap-4`}>
+    <div className={`w-full ${layoutClasses}`}>
       {collectionsToDisplay.map((collection, index) => {
         const repeatImageNumber = (index % 3) + 1;
         const imageSrc = collection.collection_image || `/image/collection${repeatImageNumber}.svg`;
@@ -355,7 +398,7 @@ const CollectionListPreview = ({ content, viewType }) => {
         {currentMainHeading}
       </h2>
 
-      {collectionsToDisplay.length > 0 ? (
+      {/* {collectionsToDisplay.length > 0 ? (
         isMobileView ? (
           currentMobileLayout === "carousel" ? (
             <div className="w-full relative">
@@ -375,6 +418,37 @@ const CollectionListPreview = ({ content, viewType }) => {
         )
       ) : (
         <div className={`flex items-center justify-center w-full h-full text-gray-500`}>
+          No collections configured or visible.
+        </div>
+      )} */}
+      {collectionsToDisplay.length > 0 ? (
+        isMobileView ? (
+          currentMobileLayout === "carousel" ? (
+            <div className="w-full relative">
+              <Slider {...mobileCarouselSettings}>{renderCarouselSlides()}</Slider>
+            </div>
+          ) : (
+            renderCollections(getMobileClasses())
+          )
+        ) : isTabletView ? (
+          currentMobileLayout === "carousel" ? (
+            <div className="w-full relative">
+              <Slider {...tabletCarouselSettings}>{renderCarouselSlides()}</Slider>
+            </div>
+          ) : (
+            renderCollections("grid grid-cols-2 sm:grid-cols-3 gap-4")
+          )
+        ) : (
+          currentDesktopLayout === "carousel" ? (
+            <div className="w-full relative">
+              <Slider {...desktopCarouselSettings}>{renderCarouselSlides()}</Slider>
+            </div>
+          ) : (
+            renderCollections(getDesktopClasses())
+          )
+        )
+      ) : (
+        <div className="flex items-center justify-center w-full h-full text-gray-500">
           No collections configured or visible.
         </div>
       )}

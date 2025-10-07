@@ -1,11 +1,9 @@
-// components/WelcomeHeader.js
-
-"use client"; // Required for using useState and useEffect (or just new Date() in a functional component)
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
-export default function WelcomeHeader() {
+export default function DashboardHeader() {
   const [currentDate, setCurrentDate] = useState("");
 
   useEffect(() => {
@@ -27,7 +25,7 @@ export default function WelcomeHeader() {
   }, []);
 
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="bg-white border-orange-500/50 border shadow-sm shadow-orange-300 rounded-lg px-3 py-2 flex items-center justify-between w-full border-b mb-2">
       <div className="flex items-end gap-2">
         <div className="flex flex-col">
           <h1 className="text-xl text-black font-semibold">Welcome Back,</h1>

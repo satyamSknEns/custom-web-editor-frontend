@@ -2,7 +2,7 @@ import React from "react";
 import GalleryPopUp from "../popupPreviews/galleryPopup";
 import Image from "next/image";
 export const schema = {
-  name: "Gallery Section",
+  name: "Gallery",
   max_items: 3,
   settings: [
     {

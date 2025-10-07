@@ -2,19 +2,16 @@ import StatCard from "./components/cards/statCard";
 import DonutChartCard from "./components/cards/donutChartCard";
 import LineChartCard from "./components/cards/lineChartCard";
 import PerformanceCard from "./components/cards/performanceCard";
-import WelcomeHeader from "./components/welcomeHeader";
 
 export default function DashboardPage() {
   return (
     <>
-      <WelcomeHeader />
-
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12 lg:col-span-4">
           <PerformanceCard />
         </div>
 
-        <div className="col-span-12 lg:col-span-8">
+        <div className="col-span-12 lg:col-span-8 bg-white rounded-xl shadow-lg p-6">
           <div className="grid grid-cols-12 gap-4 mb-6">
             <div className="col-span-6 md:col-span-4">
               <StatCard
