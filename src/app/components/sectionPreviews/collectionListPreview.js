@@ -357,29 +357,32 @@ const CollectionListPreview = ({ content, viewType }) => {
   );
 
   const renderCarouselSlides = () => (
-    collectionsToDisplay.map((collection, index) => (
-      <div key={index} className="px-1 outline-none">
-        <a href={`/collections/${formatCollectionTitleForUrl(collection.collection_title)}`} className="relative flex flex-col items-center justify-between border border-gray-200 rounded-md overflow-hidden shadow-sm aspect-[1/1] group">
-          <Image
-            src={collection.collection_image || "/image/placeholder.jpg"}
-            alt={collection.collection_title}
-            width={1000}
-            height={1000}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 opacity-80"
-          />
-          {!isMobileView ? (
-            <div className={`absolute w-full bottom-0 overflow-hidden h-10 group-hover:h-3/4 transition-all duration-500 ease-in-out bg-black/80 text-white text-center px-3 py-1 lg:text-2xl sm:text-sm`}>
-              <p className={`font-medium lg:text-lg sm:text-base text-sm mb-2`}>{formatCollectionTitle(collection.collection_title) || `Collection's name`}</p>
-              <p className={`text-xs`}>{collection.collection_description || `Collection's description`}</p>
-            </div>
-          ) : (
-            <div className={`absolute w-full bottom-0 overflow-hidden transition-all duration-500 ease-in-out bg-black/80 text-white text-center px-3 py-1 lg:text-2xl sm:text-sm`}>
-              <p className={`font-medium lg:text-lg sm:text-base text-sm`}>{formatCollectionTitle(collection.collection_title) || `Collection's name`}</p>
-            </div>
-          )}
-        </a>
-      </div>
-    ))
+    collectionsToDisplay.map((collection, index) => {
+        const repeatImageNumber = (index % 3) + 1;
+        const imageSrc = collection.collection_image || `/image/collection${repeatImageNumber}.svg`;
+      return (
+        <div key={index} className="px-1 outline-none">
+          <a href={`/collections/${formatCollectionTitleForUrl(collection.collection_title)}`} className="relative flex flex-col items-center justify-between border border-gray-200 rounded-md overflow-hidden shadow-sm aspect-[1/1] group">
+            <Image
+              src={imageSrc}
+              alt={collection.collection_title}
+              width={1000}
+              height={1000}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 opacity-80"
+            />
+            {!isMobileView ? (
+              <div className={`absolute w-full bottom-0 overflow-hidden h-10 group-hover:h-3/4 transition-all duration-500 ease-in-out bg-black/80 text-white text-center px-3 py-1 lg:text-2xl sm:text-sm`}>
+                <p className={`font-medium lg:text-lg sm:text-base text-sm mb-2`}>{formatCollectionTitle(collection.collection_title) || `Collection's name`}</p>
+                <p className={`text-xs`}>{collection.collection_description || `Collection's description`}</p>
+              </div>
+            ) : (
+              <div className={`absolute w-full bottom-0 overflow-hidden transition-all duration-500 ease-in-out bg-black/80 text-white text-center px-3 py-1 lg:text-2xl sm:text-sm`}>
+                <p className={`font-medium lg:text-lg sm:text-base text-sm`}>{formatCollectionTitle(collection.collection_title) || `Collection's name`}</p>
+              </div>
+            )}
+          </a>
+        </div>
+      )})
   );
 
    if (isPopup) {
@@ -398,29 +401,6 @@ const CollectionListPreview = ({ content, viewType }) => {
         {currentMainHeading}
       </h2>
 
-      {/* {collectionsToDisplay.length > 0 ? (
-        isMobileView ? (
-          currentMobileLayout === "carousel" ? (
-            <div className="w-full relative">
-              <Slider {...mobileCarouselSettings}>
-                {renderCarouselSlides()}
-              </Slider>
-            </div>
-          ) : (renderCollections(getMobileClasses()))
-        ) : (
-          currentDesktopLayout === "carousel" ? (
-            <div className="w-full relative">
-              <Slider {...desktopCarouselSettings}>
-                {renderCarouselSlides()}
-              </Slider>
-            </div>
-          ) : (renderCollections(getDesktopClasses()))
-        )
-      ) : (
-        <div className={`flex items-center justify-center w-full h-full text-gray-500`}>
-          No collections configured or visible.
-        </div>
-      )} */}
       {collectionsToDisplay.length > 0 ? (
         isMobileView ? (
           currentMobileLayout === "carousel" ? (

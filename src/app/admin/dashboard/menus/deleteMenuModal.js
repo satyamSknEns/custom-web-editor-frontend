@@ -7,7 +7,7 @@ const DeleteMenuModal = ({ show, menuToDelete, onConfirm, onCancel }) => {
     }
 
     return (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-40">
+        <div className="fixed inset-0 bg-gray-600/50 overflow-y-auto h-full w-full flex justify-center items-center z-40">
             <div className="flex flex-col items-center justify-center relative border w-[95%] lg:w-1/2 sm:w-3/4 shadow-lg rounded-md bg-white">
                 <div className="w-full flex items-center justify-between bg-gray-100 p-4 border-b">
                     <h4 className="text-lg leading-6 font-medium text-gray-600">
@@ -21,10 +21,10 @@ const DeleteMenuModal = ({ show, menuToDelete, onConfirm, onCancel }) => {
                     </p>
                 </div>
                 <div className="items-center p-3">
-                    <button onClick={onCancel} className="px-4 py-2 bg-gray-200 text-gray-800 text-base font-medium rounded-md w-24 mr-2 shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    <button onClick={onCancel} className="px-4 py-2 bg-gray-200 text-gray-800 text-base font-medium rounded-md w-24 mr-2 shadow-sm hover:bg-gray-300 cursor-pointer">
                         Cancel
                     </button>
-                    <button onClick={onConfirm} className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-24 shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <button onClick={onConfirm} className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-24 shadow-sm hover:bg-red-600 cursor-pointer">
                         Delete
                     </button>
                 </div>
