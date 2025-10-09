@@ -28,8 +28,8 @@ export default function Sidebar() {
       className="w-64 bg-white shadow-xl p-4 flex flex-col justify-between"
       style={{ minHeight: "100vh", }}
     >
-      <div className="text-xl font-bold mb-6">
-        <Link href="/">
+      <div className="text-xl font-bold mb-6 outline-none">
+        <Link href="/" className="outline-none">
           <Image src="/image/logo.png" alt="Logo" width={120} height={40} />
         </Link>
       </div>

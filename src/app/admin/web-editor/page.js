@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { FiSettings, FiGrid, FiTrash2, FiEyeOff, FiEye } from "react-icons/fi";
-import { MdOutlineAnnouncement } from "react-icons/md";
+import { MdOutlineAnnouncement, MdOutlineMail } from "react-icons/md";
 import { RiImageCircleAiLine } from "react-icons/ri";
 import { BsCollection } from "react-icons/bs";
 import { IoIosArrowBack } from "react-icons/io";
@@ -341,7 +341,7 @@ const WebEditor = () => {
   const formatSectionLabel = (id) => {
     const formatedSection = id
       .replace(/_/g, " ")
-      .replace(/\bsections\b/i, "")
+      .replace(/\bsections?\b/i, "")
       .trim();
     return formatedSection.charAt(0).toUpperCase() + formatedSection.slice(1);
   };
@@ -576,7 +576,7 @@ const WebEditor = () => {
       case "footer_section":
         return <RxSection />;
       case "newsletter_section":
-        return <TbSlideshow />;
+        return <MdOutlineMail />;
       default:
         return null;
     }
@@ -919,6 +919,7 @@ const WebEditor = () => {
                                   ({ id, sectionId }, index) => {
                                     const isHidden =
                                       hiddenSections.includes(id);
+                                      console.log("sectionId",sectionId);
                                     return (
                                       <Draggable
                                         key={`${id}-${index}`}

@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useMemo } from "react";
-// import Layout from "../../layout";
+// import Layout from "../../components/layout";
 import { AiOutlineCheck, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { IoMdArrowRoundBack, IoIosArrowDown } from "react-icons/io";
+import { RxCopy } from "react-icons/rx";
 import { GoPlusCircle } from "react-icons/go";
 import { MdDragIndicator } from "react-icons/md";
 import {
@@ -25,9 +26,17 @@ import { DynamicLoader } from "../../../components/loader";
 import { useMenusApi } from "./useMenusApi";
 import DeleteMenuItemModal from "./deleteMenuItemModal";
 import DeleteMenuModal from "./deleteMenuModal";
+import DuplicateMenuModal from "./duplicateMenuModal";
 
 const createHandle = (name) => {
-    return name.toLowerCase().trim().replace(/\s+/g, "_");
+    if (!name) return "";
+    let handle = name.toLowerCase().trim();
+
+    handle = handle.replace(/[^a-z0-9\s]/g, ''); 
+    handle = handle.replace(/\s+/g, '_');
+    handle = handle.replace(/^_+|_+$/g, '');
+    return handle;
+
 };
 
 const updateItemInTree = (items, id, updater) => {
@@ -110,7 +119,7 @@ const SortableItem = ({ item, handleItemChange, openDeleteModal, handleAddSubMen
                             value={item.name}
                             onChange={(e) => handleItemChange(e, item.id, "name")}
                             placeholder="e.g., Contact Us"
-                            className={`mt-1 block w-full px-3 py-1.5 border rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500 ${item.nameError ? "border-red-500" : "border-gray-300"}`}
+                            className={`mt-1 block w-full px-3 py-1.5 border text-gray-900 rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500 ${item.nameError ? "border-red-500" : "border-gray-300"}`}
                         />
                     </div>
                     <div className="w-full">
@@ -121,7 +130,7 @@ const SortableItem = ({ item, handleItemChange, openDeleteModal, handleAddSubMen
                             value={item.link}
                             onChange={(e) => handleItemChange(e, item.id, "link")}
                             placeholder="e.g., /pages/contact"
-                            className={`mt-1 block w-full px-3 py-1.5 border rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500 ${item.linkError ? "border-red-500" : "border-gray-300"}`}
+                            className={`mt-1 block w-full px-3 py-1.5 text-gray-900 border rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500 ${item.linkError ? "border-red-500" : "border-gray-300"}`}
                         />
                     </div>
                 </>
@@ -229,6 +238,8 @@ const Menus = () => {
     const [showFullMenuDeleteModal, setShowFullMenuDeleteModal] = useState(false);
     const [menuToDelete, setMenuToDelete] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc'); 
+    const [showDuplicateModal, setShowDuplicateModal] = useState(false);
+    const [saveOperation, setSaveOperation] = useState('');
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -278,6 +289,7 @@ const Menus = () => {
         setEditingMenuId(null);
         setEditingMenuHandle("");
         setEditingMenuTitle("");
+        setFeedbackMessage({ type: '', text: '' }); 
     };
 
     const handleEditClick = (menu) => {
@@ -295,6 +307,7 @@ const Menus = () => {
         setShowCreateForm(true);
         setEditingMenuHandle(menu.handle);
         setEditingMenuTitle(menu.title);
+        setFeedbackMessage({ type: '', text: '' }); 
     };
 
     const generateUniqueId = (prefix) => {
@@ -458,6 +471,25 @@ const Menus = () => {
         });
     };
 
+    const recursivelyAssignNewIds = (items, prefix = "menu_item") => {
+        return items.map(item => {
+            const newItem = {
+                ...item,
+                id: `${prefix}_${Math.random().toString(36).substring(2, 8)}`,
+                isEditing: false,
+                isExpanded: false,
+                nameError: false,
+                linkError: false,
+            };
+
+            if (item.children && item.children.length > 0) {
+                newItem.children = recursivelyAssignNewIds(item.children, prefix);
+            }
+
+            return newItem;
+        });
+    };
+
     const handleSaveMenu = async () => {
         setFeedbackMessage({ type: '', text: '' });
 
@@ -507,7 +539,10 @@ const Menus = () => {
             return;
         }
 
+        const operationType = editingMenuId ? 'update' : 'create';
+        setSaveOperation(operationType);
         setIsSaving(true);
+
         const dataToSend = {
             title: newMenuName,
             handle: editingMenuId ? editingMenuHandle : createHandle(newMenuName),
@@ -538,6 +573,52 @@ const Menus = () => {
             setFeedbackMessage({ type: 'error', text: `Error: ${errorMessage}` });
         } finally {
             setIsSaving(false);
+            setSaveOperation('');
+        }
+    };
+
+    const handleDuplicateMenuClick = () => {
+        if (editingMenuTitle) { setShowDuplicateModal(true); }
+    };
+
+    const closeDuplicateModal = () => { setShowDuplicateModal(false); };
+
+    const confirmDuplicateMenu = async (newTitle, newHandle) => {
+        closeDuplicateModal();
+        setFeedbackMessage({ type: '', text: '' });
+        setSaveOperation('duplicate');
+        setIsSaving(true);
+
+        const itemsWithNewIds = recursivelyAssignNewIds(newMenuItems, "dup_item");
+        const cleanItems = cleanMenuItems(itemsWithNewIds);
+
+        const dataToSend = {
+            title: newTitle,
+            handle: newHandle,
+            menuItems: cleanItems
+        };
+
+        try {
+            await createMenu(dataToSend);
+            setFeedbackMessage({ type: 'success', text: `Menu "${newTitle}" duplicated successfully!` });
+
+            setShowCreateForm(false);
+            setEditingMenuId(null);
+            setEditingMenuHandle("");
+            setEditingMenuTitle("");
+        } catch (error) {
+            let errorMessage = 'An unexpected error occurred during duplication.';
+            if (error.response) {
+                errorMessage = error.response.data.message || `Server responded with status: ${error.response.status}`;
+            } else if (error.request) {
+                errorMessage = 'No response received from server. Please check your network connection.';
+            } else {
+                errorMessage = error.message;
+            }
+            setFeedbackMessage({ type: 'error', text: `Duplication Error: ${errorMessage}` });
+        } finally {
+            setIsSaving(false);
+            setSaveOperation('');
         }
     };
 
@@ -552,13 +633,14 @@ const Menus = () => {
     };
 
     const confirmDeleteMenu = async () => {
+        closeFullMenuDeleteModal();
         if (menuToDelete) {
+            setSaveOperation('delete');
             setIsSaving(true);
             setFeedbackMessage({ type: '', text: '' });
             try {
                 await deleteMenu(menuToDelete._id);
                 setFeedbackMessage({ type: 'success', text: 'Menu deleted successfully!' });
-                closeFullMenuDeleteModal();
             } catch (error) {
                 let errorMessage = 'An unexpected error occurred.';
                 if (error.response) {
@@ -571,6 +653,7 @@ const Menus = () => {
                 setFeedbackMessage({ type: 'error', text: `Error: ${errorMessage}` });
             } finally {
                 setIsSaving(false);
+                setSaveOperation('');
             }
         }
     };
@@ -578,8 +661,21 @@ const Menus = () => {
     return (
         <>
             <div className="bg-white/100 relative rounded-2xl p-4 h-full">
-                {(isLoading || isSaving) && <DynamicLoader maintext={isSaving ? `${editingMenuId ? "Updating" : "Creating"} Menu...` : "Loading Menus..."} subtext="" />}
-                <div className={`flex ${showCreateForm ? "justify-start" : "justify-between"} items-center`}>
+                {(isLoading || isSaving) && (
+                    <DynamicLoader 
+                        maintext={
+                            isSaving 
+                                ? (saveOperation === 'create' ? "Creating Menu..." :
+                                saveOperation === 'update' ? "Updating Menu..." :
+                                saveOperation === 'delete' ? "Deleting Menu..." :
+                                saveOperation === 'duplicate' ? "Duplicating Menu..." :
+                                "Saving Menu...") 
+                                : "Loading Menus..."
+                        } 
+                        subtext="" 
+                    />
+                )}
+                <div className={`flex ${showCreateForm ? "justify-between" : "justify-between"} items-center`}>
                     {showCreateForm ? (
                         <div className="flex items-center justify-center gap-5">
                             <div onClick={handleCancelClick} className="flex items-center justify-center border border-slate-300 rounded-md w-8 h-8 cursor-pointer" >
@@ -592,6 +688,15 @@ const Menus = () => {
                             <h1 className="text-2xl text-slate-500 font-bold m-0">Menus</h1>
                             <button onClick={handleCreateMenuClick} className="px-4 py-2 text-base bg-orange-500 text-white border-0 rounded-md cursor-pointer hover:bg-orange-600 transition-colors duration-200" > Create Menu </button>
                         </>
+                    )}
+                    {showCreateForm && editingMenuId && (
+                        <button 
+                            onClick={handleDuplicateMenuClick} 
+                            disabled={isSaving}
+                            className="flex items-center gap-2 px-4 py-2 text-base bg-orange-500 text-white border-0 rounded-md cursor-pointer hover:bg-orange-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
+                        > 
+                            <RxCopy size={18} /> Duplicate
+                        </button>
                     )}
                 </div>
 
@@ -606,11 +711,11 @@ const Menus = () => {
                                         <span className="absolute right-1 text-red-500 text-sm mt-1"> {validationError} </span>
                                     )}
                                 </label>
-                                <input type="text" id="menu-name" value={newMenuName} onChange={handleNameChange} placeholder="e.g., Header menu" className={`mt-1 block w-full px-3 py-1.5 bg-white border ${validationError ? "border-red-500" : "border-gray-300"} rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500`} />
+                                <input type="text" id="menu-name" value={newMenuName} onChange={handleNameChange} placeholder="e.g., Header menu" className={`mt-1 block w-full px-3 py-1.5 bg-white border text-gray-900 ${validationError ? "border-red-500" : "border-gray-300"} rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500`} />
                             </div>
                             <div className="w-full">
                                 <label htmlFor="menu-handle" className="block text-sm font-medium text-gray-700" > Handle </label>
-                                <input type="text" id="menu-handle" value={editingMenuId ? editingMenuHandle : createHandle(newMenuName)} readOnly disabled className="mt-1 block w-full px-3 py-1.5 bg-gray-50 border border-gray-300 rounded-md shadow-sm cursor-not-allowed focus:outline-none focus:ring-slate-400 focus:border-slate-400" />
+                                <input type="text" id="menu-handle" value={editingMenuId ? editingMenuHandle : createHandle(newMenuName)} readOnly disabled className="mt-1 block w-full px-3 py-1.5 bg-gray-50 border text-gray-900 border-gray-300 rounded-md shadow-sm cursor-not-allowed focus:outline-none focus:ring-slate-400 focus:border-slate-400" />
                             </div>
                         </div>
                         <div className="mt-3">
@@ -628,8 +733,8 @@ const Menus = () => {
                             </button>
                         </div>
                         <div className="mt-6 flex justify-end space-x-3">
-                            <button onClick={handleCancelClick} className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 outline-none" > Cancel </button>
-                            <button onClick={handleSaveMenu} className="px-6 py-2 text-sm font-medium text-white bg-orange-600 rounded-md shadow-sm hover:bg-orange-700 outline-none">{editingMenuId ? 'Update' : 'Save'}</button>
+                            <button onClick={handleCancelClick} className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 outline-none cursor-pointer" > Cancel </button>
+                            <button onClick={handleSaveMenu} className="px-6 py-2 text-sm font-medium text-white bg-orange-600 rounded-md shadow-sm hover:bg-orange-700 outline-none cursor-pointer" disabled={isSaving}>{editingMenuId ? 'Update' : 'Save'}</button>
                         </div>
                     </div>
                 ) : (
@@ -653,7 +758,7 @@ const Menus = () => {
                             <tbody>
                                 {sortedMenus.length > 0 ? (
                                     sortedMenus.map((menu, index) => (
-                                        <tr key={menu.handle} className="bg-white border-b cursor-pointer hover:bg-slate-100" >
+                                        <tr key={menu.handle} className="bg-white border-b border-gray-200 cursor-pointer hover:bg-slate-100" >
                                             <td className="px-6 py-4">{index + 1}</td>
                                             <td className="px-6 py-4">{menu?.title}</td>
                                             <td className="px-6 py-4">
@@ -675,7 +780,7 @@ const Menus = () => {
                                 ) : (
                                     <tr>
                                         <td colSpan="4" className="text-center py-8 text-gray-500">
-                                            {`No menus found. Click "Create Menu" to add one.`}
+                                            No menus found. Click &quot;Create Menu&quot; to add one.
                                         </td>
                                     </tr>
                                 )}
@@ -698,6 +803,16 @@ const Menus = () => {
                 onConfirm={confirmDeleteMenu}
                 onCancel={closeFullMenuDeleteModal}
             />
+            
+            <DuplicateMenuModal
+                show={showDuplicateModal}
+                menuTitle={editingMenuTitle}
+                onConfirm={confirmDuplicateMenu}
+                onCancel={closeDuplicateModal}
+                createHandle={createHandle}
+            />
+
+        
         </>
     );
 };
